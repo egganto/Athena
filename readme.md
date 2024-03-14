@@ -1,2 +1,2 @@
-# EduWW Discord Math Bot
-A EduWW Computer Science Club project.
+# Athena
+A Discord math bot project by the EduWW CS Club.
