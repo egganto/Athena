@@ -9,12 +9,12 @@ const basicCommand = new SlashCommandBuilder()
     subcommand
       .setName(`sum`)
       .setDescription(`Finds the sum of 2 numbers`)
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`a`)
           .setDescription(`Value of a`)
           .setRequired(true))
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`b`)
           .setDescription(`Value of b`)
@@ -25,12 +25,12 @@ const basicCommand = new SlashCommandBuilder()
     subcommand
       .setName(`difference`)
       .setDescription(`Finds the difference of 2 numbers`)
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`a`)
           .setDescription(`Value of a`)
           .setRequired(true))
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`b`)
           .setDescription(`Value of b`)
@@ -41,12 +41,12 @@ const basicCommand = new SlashCommandBuilder()
     subcommand
       .setName(`product`)
       .setDescription(`Finds the product of 2 numbers`)
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`a`)
           .setDescription(`Value of a`)
           .setRequired(true))
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`b`)
           .setDescription(`Value of b`)
@@ -57,12 +57,12 @@ const basicCommand = new SlashCommandBuilder()
     subcommand
       .setName(`quotient`)
       .setDescription(`Finds the quotient of 2 numbers`)
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`a`)
           .setDescription(`Value of a`)
           .setRequired(true))
-      .addIntegerOption((option) =>
+      .addNumberOption((option) =>
         option
           .setName(`b`)
           .setDescription(`Value of b`)
