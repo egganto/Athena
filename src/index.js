@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { REST, Routes } from 'discord.js';
+import basicCommand from './commands/basic.js';
 
 config();
 
@@ -20,39 +21,58 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 client.on('ready', () => console.log(`${client.user.tag} is online.`));
 
-// Responds to the sum command
-client.on('interactionCreate', (interaction) => {
-  if (interaction.isChatInputCommand()) {
-    const a = interaction.options.getInteger('a');
-    const b = interaction.options.getInteger('b');
-    const c = a + b;
-    interaction.reply({ content: `The sum is ${c}`,
-    });
+// ping command interaction
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'ping') {
+    await interaction.reply('Pong!');
+  }
+});
+
+// basic command interaction
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  if (interaction.commandName === 'basic') {
+    if (interaction.options.getSubcommand() === 'sum') {
+      const a = interaction.options.getInteger('a');
+      const b = interaction.options.getInteger('b');
+      const c = a + b;
+      interaction.reply({ content: `${a} + ${b} = ${c}`,
+      })
+    }
+
+    if (interaction.options.getSubcommand() === 'difference') {
+      const a = interaction.options.getInteger('a');
+      const b = interaction.options.getInteger('b');
+      const c = a - b;
+      interaction.reply({ content: `${a} - ${b} = ${c}`,
+      })
+    }
+
+    if (interaction.options.getSubcommand() === 'product') {
+      const a = interaction.options.getInteger('a');
+      const b = interaction.options.getInteger('b');
+      const c = a * b;
+      interaction.reply({ content: `${a} * ${b} = ${c}`,
+      })
+    }
+
+    if (interaction.options.getSubcommand() === 'quotient') {
+      const a = interaction.options.getInteger('a');
+      const b = interaction.options.getInteger('b');
+      const c = a / b;
+      interaction.reply({ content: `${a} / ${b} = ${c}`,
+      })
+    }
   }
 });
 
 async function main() {
-  // Available slash commands to use
-  const commands = [
-    {
-      name: `sum`,
-      description: `Finds the sum of 2 numbers`,
-      options: [
-        {
-          name: 'a',
-          description: 'Value of a',
-          type: 4,
-          required: true,
-        },
-        {
-          name: 'b',
-          description: 'Value of b',
-          type: 4,
-          require: true,
-        },
-      ]
-    },
-  ];
+  
+  // Sends commands to Discord
+  const commands = [basicCommand];
 
     try {
       console.log('Started refreshing application (/) commands.');
@@ -65,13 +85,3 @@ async function main() {
 };
 
 main();
-
-client.login(TOKEN);
-
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isChatInputCommand()) return;
-
-  if (interaction.commandName === 'ping') {
-    await interaction.reply('Pong!');
-  }
-});
