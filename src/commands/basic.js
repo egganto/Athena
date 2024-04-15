@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "discord.js";
 
 const basicCommand = new SlashCommandBuilder()
   .setName(`basic`)
-  .setDescription(`Basic operations (addition, subtraction, multiplication, and division)`)
+  .setDescription(`Basic operations (addition, subtraction, multiplication, and division`)
   
   // Sum subcommand
   .addSubcommand((subcommand) =>

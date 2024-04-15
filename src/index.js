@@ -2,6 +2,8 @@ import { config } from 'dotenv';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { REST, Routes } from 'discord.js';
 import basicCommand from './commands/basic.js';
+import calculateCommand from './commands/calculate.js';
+import pythagoreanCommand from './commands/pythagorean_theorem.js';
 
 config();
 
@@ -69,10 +71,40 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
+// calculate interaction
+client.on('interactionCreate', async (interaction) => {
+  if (interaction.commandName === 'calculate') {
+    const input = interaction.options.getString('input');
+    const output = eval(input);
+    interaction.reply({ content: `${input} = ${output}`,
+    })
+  }
+});
+
+// pythagorean theorem interaction
+client.on('interactionCreate', async (interaction) => {
+  if (interaction.commandName === 'pythagorean') {
+    if (interaction.options.getSubcommand() === 'leg') {
+      const a = c**2 - b**2;
+      const b = interaction.options.getNumber('leg');
+      const c = interaction.options.getNumber('hypotenuse');
+      interaction.reply({ content: `c = ${c} \nb = ${b} \n\na = ${c}^2 - ${b}^2 \na = ${a}`,
+      })
+    }
+
+    if (interaction.options.getSubcommand() === 'hypotenuse') {
+      const a = interaction.options.getNumber('leg_1');
+      const b = interaction.options.getNumber('leg_2');
+      const c = a**2 + b**2;
+      interaction.reply({ content: `a = ${a} \nb = ${b} \n\nc = ${a}^2 + ${b}^2 \nc = ${c}`, })
+    }
+  }
+})
+
 async function main() {
   
   // Sends commands to Discord
-  const commands = [basicCommand];
+  const commands = [basicCommand, calculateCommand, pythagoreanCommand];
 
     try {
       console.log('Started refreshing application (/) commands.');
