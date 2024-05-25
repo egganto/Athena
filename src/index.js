@@ -176,6 +176,7 @@ client.on('interactionCreate', async (interaction) => {
 (async () => {
   
     try {
+      console.log(CLIENT_ID, TOKEN)
       console.log(`Started refreshing ${commands.length} application (/) commands.`);
       const data = await rest.put(
         Routes.applicationCommands(CLIENT_ID),
@@ -183,6 +184,7 @@ client.on('interactionCreate', async (interaction) => {
       );
 
       console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+
       client.login(TOKEN);
     } catch (error) {
       console.error(`Failed to deploy application commands: ${error}`);

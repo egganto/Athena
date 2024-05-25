@@ -24,7 +24,7 @@ const perimeterCommand = new SlashCommandBuilder()
 
   // subcommand for triangle
   .addSubcommand((subcommand) =>
-    subcommand)
+    subcommand
     .setName("triangle")
     .setDescription("Finds the perimeter of a triangle")
     .addNumberOption((option) =>
@@ -45,6 +45,7 @@ const perimeterCommand = new SlashCommandBuilder()
       .setDescription("value of side c of the triangle")
       .setRequired(true)
     )
+  )
 
   // subcommand for rectangle
   .addSubcommand((subcommand) =>
@@ -152,6 +153,6 @@ const perimeterCommand = new SlashCommandBuilder()
       .setDescription("length of a side")
       .setRequired(true)
     )
-  );
+  )
 
 export default perimeterCommand.toJSON();
