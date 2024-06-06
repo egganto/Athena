@@ -7,6 +7,7 @@ import pythagoreanCommand from './commands/pythagorean_theorem.js';
 import pingCommand from './commands/ping.js';
 import areaCommand from './commands/area.js';
 import perimeterCommand from './commands/perimeter.js';
+import volumeCommand from './commands/volume.js';
 
 config();
 
@@ -155,6 +156,30 @@ client.on('interactionCreate', async (interaction) => {
   }
 })
 
+// volume interaction
+client.on('interactionCreate', async (interaction) => {
+  if (interaction.commandName === 'volume') {
+    if (interaction.options.getSubcommand() === 'cube') {
+      const s = interaction.options.getNumber('s');
+      const V = s ** 3;
+      interaction.reply({ content: `V = ${s}^3 \nV = ${V}` });
+    }
+
+    if (interaction.options.getSubcommand() === 'sphere') {
+      const r = interaction.options.getNumber('r');
+      const V = (4/3) * Math.PI * (r ** 3);
+      interaction.reply({ content: `V = (4/3) * π * (${r}^3) \nV = ${V}` });
+    }
+
+    if (interaction.options.getSubcommand() === 'cylinder') {
+      const r = interaction.options.getNumber('r');
+      const h = interaction.options.getNumber('h');
+      const V = Math.PI * (r ** 2) * h;
+      interaction.reply({ content: `V = π * (${r}^2) * ${h} \nV = ${V}` });
+    }
+  }
+});
+
 // perimeter interaction
 client.on('interactionCreate', async (interaction) => {
   if (interaction.commandName === 'perimeter') {
@@ -221,7 +246,7 @@ client.on('interactionCreate', async (interaction) => {
 })
 
   // Sends commands to Discord
-  const commands = [basicCommand, calculateCommand, pythagoreanCommand, pingCommand, areaCommand, perimeterCommand];
+  const commands = [basicCommand, calculateCommand, pythagoreanCommand, pingCommand, areaCommand, perimeterCommand,volumeCommand];
 
 (async () => {
   
