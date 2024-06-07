@@ -1,13 +1,21 @@
-import { config } from 'dotenv';
-import { Client, GatewayIntentBits } from 'discord.js';
-import { REST, Routes } from 'discord.js';
-import basicCommand from './commands/basic.js';
-import calculateCommand from './commands/calculate.js';
-import pythagoreanCommand from './commands/pythagorean_theorem.js';
-import pingCommand from './commands/ping.js';
-import areaCommand from './commands/area.js';
-import perimeterCommand from './commands/perimeter.js';
-import volumeCommand from './commands/volume.js';
+import { config } from "dotenv";
+import { Client, GatewayIntentBits } from "discord.js";
+import { REST, Routes } from "discord.js";
+import basicCommand from "./commands/basic.js";
+import calculateCommand from "./commands/calculate.js";
+import pythagoreanCommand from "./commands/pythagorean_theorem.js";
+import pingCommand from "./commands/ping.js";
+import areaCommand from "./commands/area.js";
+import perimeterCommand from "./commands/perimeter.js";
+import volumeCommand from "./commands/volume.js";
+
+import volumeC from "./cargo/volumeC.js";
+import areaC from "./cargo/areaC.js";
+import perimeterC from "./cargo/perimeterC.js";
+import pythagorean_theoremC from "./cargo/pythagorean_theoremC.js";
+import calculateC from "./cargo/calculateC.js";
+import basicC from "./cargo/basicC.js";
+import pingC from "./cargo/pingC.js";
 
 config();
 
@@ -17,285 +25,76 @@ const CLIENT_ID = process.env.CLIENT_ID;
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.Guilds, 
+    GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
 });
 
-const rest = new REST({ version: '10' }).setToken(TOKEN);
+const rest = new REST({ version: "10" }).setToken(TOKEN);
 
-client.on('ready', () => console.log(`${client.user.tag} is online.`));
+client.on("ready", () => console.log(`${client.user.tag} is online.`));
 
 // ping command interaction
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isChatInputCommand()) return;
-
-  if (interaction.commandName === 'ping') {
-    interaction.reply({ content: 'Pong!', 
-    });
-  }
+client.on("interactionCreate", async (interaction) => {
+  pingC(interaction);
 });
 
 // basic command interaction
-client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) return;
-
-  if (interaction.commandName === 'basic') {
-    if (interaction.options.getSubcommand() === 'sum') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const c = a + b;
-      interaction.reply({ content: `${a} + ${b} = ${c}`,
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'difference') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const c = a - b;
-      interaction.reply({ content: `${a} - ${b} = ${c}`,
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'product') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const c = a * b;
-      interaction.reply({ content: `${a} * ${b} = ${c}`,
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'quotient') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const c = a / b;
-      interaction.reply({ content: `${a} / ${b} = ${c}`,
-      })
-    }
-  }
+client.on("interactionCreate", async (interaction) => {
+  basicC(interaction);
 });
 
 // calculate interaction
-client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'calculate') {
-    const input = interaction.options.getString('input');
-    const output = eval(input);
-    interaction.reply({ content: `${input} = ${output}`,
-    })
-  }
+client.on("interactionCreate", async (interaction) => {
+  calculateC(interaction);
 });
 
 // pythagorean theorem interaction
-client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'pythagorean') {
-    if (interaction.options.getSubcommand() === 'leg') {
-      const b = interaction.options.getNumber('leg');
-      const c = interaction.options.getNumber('hypotenuse');
-      const a = c**2 - b**2;
-      interaction.reply({ content: `c = ${c} \nb = ${b} \n\na = ${c}^2 - ${b}^2 \na = ${a}`,
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'hypotenuse') {
-      const a = interaction.options.getNumber('leg_1');
-      const b = interaction.options.getNumber('leg_2');
-      const c = a**2 + b**2;
-      interaction.reply({ content: `a = ${a} \nb = ${b} \n\nc = ${a}^2 + ${b}^2 \nc = ${c}`, })
-    }
-  }
+client.on("interactionCreate", async (interaction) => {
+  pythagorean_theoremC(interaction);
 });
 
 // area interaction
-client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'area') {
-    if (interaction.options.getSubcommand() === 'rectangle') {
-      const l = interaction.options.getNumber('l');
-      const w = interaction.options.getNumber('w');
-      const A = l * w;
-      interaction.reply({ content: `A = ${l} * ${w} \nA = ${A}`, 
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'square') {
-      const a = interaction.options.getNumber('a');
-      const A = a**2;
-      interaction.reply({ content: `A = ${a}^2 \nA = ${A}`, })
-    }
-
-    if (interaction.options.getSubcommand() === 'triangle') {
-      const b = interaction.options.getNumber('b');
-      const h = interaction.options.getNumber('h');
-      const A = (1/2) * b * h;
-      interaction.reply({ content: `A = (1/2) * ${b} * ${h} \nA = ${A}`, })
-    }
-
-    if (interaction.options.getSubcommand() === 'circle') {
-      const r = interaction.options.getNumber('r');
-      const A = 3.14 * (r ** 2);
-      interaction.reply({ content: `A = 3.14 * (${r}^2) \nA = ${A}`,
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'trapezoid') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const h = interaction.options.getNumber('h');
-      const A = (1/2) * (a + b) * h;
-      interaction.reply({ content: `A = (1/2) * (${a} + ${b}) * h \nA = ${A}`,
-      })
-    }
-
-    if (interaction.options.getSubcommand() === 'ellipse') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const A = 3.14 * a * b;
-      interaction.reply({ content: `A = 3.14 * ${a} * ${b} \nA = ${A}`,
-      })
-    }
-  }
-})
+client.on("interactionCreate", async (interaction) => {
+  areaC(interaction);
+});
 
 // volume interaction
-client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'volume') {
-    if (interaction.options.getSubcommand() === 'cube') {
-      const s = interaction.options.getNumber('s');
-      const V = s ** 3;
-      interaction.reply({ content: `V = ${s}^3 \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'sphere') {
-      const r = interaction.options.getNumber('r');
-      const V = (4/3) * Math.PI * (r ** 3);
-      interaction.reply({ content: `V = (4/3) * π * (${r}^3) \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'cylinder') {
-      const r = interaction.options.getNumber('r');
-      const h = interaction.options.getNumber('h');
-      const V = Math.PI * (r ** 2) * h;
-      interaction.reply({ content: `V = π * (${r}^2) * ${h} \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'cuboid') {
-      const l = interaction.options.getNumber('l');
-      const w = interaction.options.getNumber('w');
-      const h = interaction.options.getNumber('h');
-      const V = l * w * h;
-      interaction.reply({ content: `V = ${l} * ${w} * ${h} \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'triangularpyramid') {
-      const b = interaction.options.getNumber('b');
-      const h = interaction.options.getNumber('h');
-      const V = (1/3) * b * h;
-      interaction.reply({ content: `V = (1/3) * ${b} * ${h} \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'squarepyramid') {
-      const s = interaction.options.getNumber('s');
-      const h = interaction.options.getNumber('h');
-      const V = (1/3) * (s ** 2) * h;
-      interaction.reply({ content: `V = (1/3) * (${s}^2) * ${h} \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'cone') {
-      const r = interaction.options.getNumber('r');
-      const h = interaction.options.getNumber('h');
-      const V = (1/3) * Math.PI * (r ** 2) * h;
-      interaction.reply({ content: `V = (1/3) * π * (${r}^2) * ${h} \nV = ${V}` });
-    }
-
-    if (interaction.options.getSubcommand() === 'triangularprism') {
-      const b = interaction.options.getNumber('b');
-      const h = interaction.options.getNumber('h');
-      const V = b * h;
-      interaction.reply({ content: `V = ${b} * ${h} \nV = ${V}` });
-    }
-  }
+client.on("interactionCreate", async (interaction) => {
+  volumeC(interaction);
 });
 
 // perimeter interaction
-client.on('interactionCreate', async (interaction) => {
-  if (interaction.commandName === 'perimeter') {
-    if (interaction.options.getSubcommand() === 'parallelogram') {
-      const base = interaction.options.getNumber('base');
-      const height = interaction.options.getNumber('height');
-      const sum = base + height;
-      const P = 2 * (base + height);
-      interaction.reply({ content: `P = 2(base + height) \nP = 2(${base} + ${height} \nP = 2(${sum}) \nP = ${P}` })
-    }
+client.on("interactionCreate", async (interaction) => {
+  perimeterC(interaction);
+});
 
-    if (interaction.options.getSubcommand() === 'triangle') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const c = interaction.options.getNumber('c');
-      const P = a + b + c;
-      interaction.reply({ content: `P = a + b + c \nP = ${a} + ${b} + ${c} \nP = ${P}` })
-    }
-
-    if (interaction.options.getSubcommand() === 'rectangle') {
-      const length = interaction.options.getNumber('length');
-      const width = interaction.options.getNumber('width');
-      const sum = length + width;
-      const P = 2 * sum;
-      interaction.reply({ content: `P = 2(length + width) \nP = 2(${length} + ${width}) \nP = 2(${sum}) \nP = ${P}` })
-    }
-
-    if (interaction.options.getSubcommand() === 'square') {
-      const a = interaction.options.getNumber('a');
-      const P = 4*a;
-      interaction.reply({ content: `P = 4a \nP = 4(${a}) \nP = (${P})` })
-    }
-
-    if (interaction.options.getSubcommand() === 'trapezoid') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const c = interaction.options.getNumber('c');
-      const d = interaction.options.getNumber('d');
-      const P = a+b+c+d;
-      interaction.reply({ content: `P = a + b + c + d \nP = ${a} + ${b} + ${c} + ${d} \nP = ${P}` })
-    }
-
-    if (interaction.options.getSubcommand() === 'kite') {
-      const a = interaction.options.getNumber('a');
-      const b = interaction.options.getNumber('b');
-      const A = 2*a;
-      const B = 2*b;
-      const P = A + B;
-      interaction.reply({ content: `P = 2a + 2b \nP = 2(${a}) + 2(${b}) \nP = ${A} + ${B} \nP = ${P}` })
-    }
-
-    if (interaction.options.getSubcommand() === 'rhombus') {
-      const a = interaction.options.getNumber('a');
-      const P = 4*a;
-      interaction.reply({ content: `P = 4a \nP = 4(${a}) \nP = ${P}` })
-    }
-
-    if (interaction.options.getSubcommand() === 'hexagon') {
-      const a = interaction.options.getNumber('a');
-      const P = 6*a;
-      interaction.reply({ content: `P = 6a \nP = 6(${a}) \nP = ${P}` })
-    }
-  }
-})
-
-  // Sends commands to Discord
-  const commands = [basicCommand, calculateCommand, pythagoreanCommand, pingCommand, areaCommand, perimeterCommand,volumeCommand];
+// Sends commands to Discord
+const commands = [
+  basicCommand,
+  calculateCommand,
+  pythagoreanCommand,
+  pingCommand,
+  areaCommand,
+  perimeterCommand,
+  volumeCommand,
+];
 
 (async () => {
-  
-    try {
-      console.log(`Started refreshing ${commands.length} application (/) commands.`);
-      const data = await rest.put(
-        Routes.applicationCommands(CLIENT_ID),
-        { body: commands },
-      );
+  try {
+    console.log(
+      `Started refreshing ${commands.length} application (/) commands.`
+    );
+    const data = await rest.put(Routes.applicationCommands(CLIENT_ID), {
+      body: commands,
+    });
 
-      console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-      client.login(TOKEN);
-    } catch (error) {
-      console.error(`Failed to deploy application commands: ${error}`);
-    }
+    console.log(
+      `Successfully reloaded ${data.length} application (/) commands.`
+    );
+    client.login(TOKEN);
+  } catch (error) {
+    console.error(`Failed to deploy application commands: ${error}`);
+  }
 })();
